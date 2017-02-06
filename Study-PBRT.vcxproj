@@ -71,7 +71,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="pbrt.cpp" />
+    <ClCompile Include="src\core\memory.cpp" />
+    <ClCompile Include="src\pbrt.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\core\memory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
