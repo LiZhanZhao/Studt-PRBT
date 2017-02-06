@@ -76,6 +76,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\memory.h" />
+    <ClInclude Include="src\core\parallel.h" />
+    <ClInclude Include="src\core\pbrt.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

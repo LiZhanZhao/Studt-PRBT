@@ -20,5 +20,11 @@
     <ClInclude Include="src\core\memory.h">
       <Filter>src\core</Filter>
     </ClInclude>
+    <ClInclude Include="src\core\parallel.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\pbrt.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
