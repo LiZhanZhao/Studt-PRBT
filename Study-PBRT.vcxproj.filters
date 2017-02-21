@@ -15,6 +15,27 @@
     <ClCompile Include="src\pbrt.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\shape.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\geometry.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\error.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\progressreporter.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\transform.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\quaternion.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\diffgeom.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\memory.h">
@@ -24,6 +45,27 @@
       <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\pbrt.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\shape.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\geometry.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\error.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\progressreporter.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\transform.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\quaternion.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\diffgeom.h">
       <Filter>src\core</Filter>
     </ClInclude>
   </ItemGroup>

@@ -71,13 +71,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\diffgeom.cpp" />
+    <ClCompile Include="src\core\error.cpp" />
+    <ClCompile Include="src\core\geometry.cpp" />
     <ClCompile Include="src\core\memory.cpp" />
+    <ClCompile Include="src\core\progressreporter.cpp" />
+    <ClCompile Include="src\core\quaternion.cpp" />
+    <ClCompile Include="src\core\shape.cpp" />
+    <ClCompile Include="src\core\transform.cpp" />
     <ClCompile Include="src\pbrt.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\diffgeom.h" />
+    <ClInclude Include="src\core\error.h" />
+    <ClInclude Include="src\core\geometry.h" />
     <ClInclude Include="src\core\memory.h" />
     <ClInclude Include="src\core\parallel.h" />
     <ClInclude Include="src\core\pbrt.h" />
+    <ClInclude Include="src\core\progressreporter.h" />
+    <ClInclude Include="src\core\quaternion.h" />
+    <ClInclude Include="src\core\shape.h" />
+    <ClInclude Include="src\core\transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
