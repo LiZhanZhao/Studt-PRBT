@@ -25,6 +25,7 @@ static void processError(const char *format, va_list args,
     // don't get jumbled up...
     std::string errorString;
 
+	/*
     // Print line and position in input file, if available
     extern int line_num;
     if (line_num != 0) {
@@ -34,6 +35,7 @@ static void processError(const char *format, va_list args,
         sprintf(buf, "(%d): ", line_num);
         errorString += buf;
     }
+	*/
 
     // PBRT_ERROR_CONTINUE, PBRT_ERROR_ABORT
     // Print formatted error message
@@ -68,15 +70,9 @@ static void processError(const char *format, va_list args,
     fprintf(stderr, "%s\n", errorString.c_str());
 
     if (disposition == PBRT_ERROR_ABORT) {
-#if defined(PBRT_IS_WINDOWS)
         __debugbreak();
-#else
-        abort();
-#endif
+
     }
-#if !defined(PBRT_IS_WINDOWS)
-    free(errorBuf);
-#endif
 }
 
 

@@ -124,5 +124,14 @@ inline int Ceil2Int(float val) {
 	return (int)ceilf(val);
 }
 
+class Vector;
+class Point;
+class Normal;
+class Ray;
+class RayDifferential;
+class BBox;
+class Transform;
+struct DifferentialGeometry;
+class Shape;
 
 #endif
