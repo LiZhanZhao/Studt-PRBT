@@ -133,5 +133,7 @@ class BBox;
 class Transform;
 struct DifferentialGeometry;
 class Shape;
+class Intersection;
+class Primitive;
 
 #endif
