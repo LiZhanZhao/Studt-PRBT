@@ -7,8 +7,12 @@ typedef volatile LONG AtomicInt32;
 typedef volatile LONGLONG AtomicInt64;
 
 
-inline int64_t AtomicAdd(AtomicInt64 *v, int64_t delta) {
-	return InterlockedAdd64(v, delta);
+//inline int64_t AtomicAdd(AtomicInt64 *v, int64_t delta) {
+//	return InterlockedAdd64(v, delta);
+//}
+
+inline int32_t AtomicAdd(AtomicInt32 *v, int32_t delta){
+	return InterlockedAdd(v, delta);
 }
 
 #endif
