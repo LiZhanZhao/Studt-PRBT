@@ -135,5 +135,9 @@ struct DifferentialGeometry;
 class Shape;
 class Intersection;
 class Primitive;
+template <int nSamples> class CoefficientSpectrum;
+class RGBSpectrum;
+typedef RGBSpectrum Spectrum;
+class VolumeRegion;
 
 #endif
