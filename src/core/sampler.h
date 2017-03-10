@@ -9,7 +9,6 @@
 #include "rng.h"
 #include "memory.h"
 #include "integrator.h"
-#include "volume.h"
 
 // Sampling Declarations
 class Sampler {

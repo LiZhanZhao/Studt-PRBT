@@ -140,6 +140,7 @@ template <int nSamples> class CoefficientSpectrum;
 class RGBSpectrum;
 typedef RGBSpectrum Spectrum;
 class VolumeRegion;
+class Camera;
 class Sampler;
 struct CameraSample;
 struct LightSample;
@@ -147,8 +148,9 @@ struct LightSampleOffsets;
 struct VisibilityTester;
 struct Distribution1D;
 struct Sample;
-class Integrator;
 class SurfaceIntegrator;
+
+class Integrator;
 class VolumeIntegrator;
 
 

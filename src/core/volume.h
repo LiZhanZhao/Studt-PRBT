@@ -4,8 +4,6 @@
 #define PBRT_CORE_VOLUME_H
 
 // core/volume.h*
-#include "pbrt.h"
-#include "spectrum.h"
 #include "geometry.h"
 #include "transform.h"
 #include "integrator.h"
