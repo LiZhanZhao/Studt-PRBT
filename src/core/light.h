@@ -70,14 +70,14 @@ struct VisibilityTester {
     Ray r;
 };
 
-//
-//class AreaLight : public Light {
-//public:
-//    // AreaLight Interface
-//    AreaLight(const Transform &l2w, int ns) : Light(l2w, ns) { }
-//    virtual Spectrum L(const Point &p, const Normal &n,
-//                       const Vector &w) const = 0;
-//};
+
+class AreaLight : public Light {
+public:
+    // AreaLight Interface
+    AreaLight(const Transform &l2w, int ns) : Light(l2w, ns) { }
+    virtual Spectrum L(const Point &p, const Normal &n,
+                       const Vector &w) const = 0;
+};
 
 
 struct LightSample {

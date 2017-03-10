@@ -154,5 +154,6 @@ class VolumeIntegrator;
 class Light;
 class Scene;
 class Renderer;
+class AreaLight;
 
 #endif
