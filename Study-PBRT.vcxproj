@@ -37,6 +37,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>F:\Important_Study_Pro\Study-PBRT\src\core;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -80,18 +81,22 @@
     <ClCompile Include="src\core\light.cpp" />
     <ClCompile Include="src\core\memory.cpp" />
     <ClCompile Include="src\core\montecarlo.cpp" />
+    <ClCompile Include="src\core\parallel.cpp" />
     <ClCompile Include="src\core\primitive.cpp" />
     <ClCompile Include="src\core\progressreporter.cpp" />
     <ClCompile Include="src\core\quaternion.cpp" />
+    <ClCompile Include="src\core\reflection.cpp" />
     <ClCompile Include="src\core\renderer.cpp" />
     <ClCompile Include="src\core\rng.cpp" />
     <ClCompile Include="src\core\sampler.cpp" />
     <ClCompile Include="src\core\scene.cpp" />
     <ClCompile Include="src\core\shape.cpp" />
     <ClCompile Include="src\core\spectrum.cpp" />
+    <ClCompile Include="src\core\timer.cpp" />
     <ClCompile Include="src\core\transform.cpp" />
     <ClCompile Include="src\core\volume.cpp" />
     <ClCompile Include="src\pbrt.cpp" />
+    <ClCompile Include="src\renderers\samplerrenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\camera.h" />
@@ -108,14 +113,17 @@
     <ClInclude Include="src\core\primitive.h" />
     <ClInclude Include="src\core\progressreporter.h" />
     <ClInclude Include="src\core\quaternion.h" />
+    <ClInclude Include="src\core\reflection.h" />
     <ClInclude Include="src\core\renderer.h" />
     <ClInclude Include="src\core\rng.h" />
     <ClInclude Include="src\core\sampler.h" />
     <ClInclude Include="src\core\scene.h" />
     <ClInclude Include="src\core\shape.h" />
     <ClInclude Include="src\core\spectrum.h" />
+    <ClInclude Include="src\core\timer.h" />
     <ClInclude Include="src\core\transform.h" />
     <ClInclude Include="src\core\volume.h" />
+    <ClInclude Include="src\renderers\samplerrenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -125,6 +125,23 @@ inline int Ceil2Int(float val) {
 	return (int)ceilf(val);
 }
 
+struct Options {
+	Options() {
+		nCores = 0;
+		quickRender = quiet = openWindow = verbose = false;
+		imageFile = "";
+	}
+	int nCores;
+	bool quickRender;
+	bool quiet, verbose;
+	bool openWindow;
+	string imageFile;
+};
+
+extern Options PbrtOptions;
+
+class Mutex;
+
 class Vector;
 class Point;
 class Normal;
