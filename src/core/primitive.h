@@ -22,9 +22,9 @@ public:
 	
     virtual BSDF *GetBSDF(const DifferentialGeometry &dg,
         const Transform &ObjectToWorld, MemoryArena &arena) const = 0;
-	/*
+	
     virtual BSSRDF *GetBSSRDF(const DifferentialGeometry &dg,
-        const Transform &ObjectToWorld, MemoryArena &arena) const = 0;*/
+        const Transform &ObjectToWorld, MemoryArena &arena) const = 0;
 
     // Primitive Public Data
     const uint32_t primitiveId;

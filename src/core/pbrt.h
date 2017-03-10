@@ -161,5 +161,6 @@ class BTDF;
 class BSDF;
 struct BSDFSample;
 struct BSDFSampleOffsets;
+class BSSRDF;
 
 #endif
