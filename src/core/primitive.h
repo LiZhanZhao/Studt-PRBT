@@ -19,9 +19,10 @@ public:
     void FullyRefine(vector<Reference<Primitive> > &refined) const;
 
     virtual const AreaLight *GetAreaLight() const = 0;
-	/*
+	
     virtual BSDF *GetBSDF(const DifferentialGeometry &dg,
         const Transform &ObjectToWorld, MemoryArena &arena) const = 0;
+	/*
     virtual BSSRDF *GetBSSRDF(const DifferentialGeometry &dg,
         const Transform &ObjectToWorld, MemoryArena &arena) const = 0;*/
 

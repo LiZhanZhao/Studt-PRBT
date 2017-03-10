@@ -155,5 +155,11 @@ class Light;
 class Scene;
 class Renderer;
 class AreaLight;
+class BxDF;
+class BRDF;
+class BTDF;
+class BSDF;
+struct BSDFSample;
+struct BSDFSampleOffsets;
 
 #endif
