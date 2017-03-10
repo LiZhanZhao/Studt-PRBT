@@ -149,9 +149,10 @@ struct VisibilityTester;
 struct Distribution1D;
 struct Sample;
 class SurfaceIntegrator;
-
 class Integrator;
 class VolumeIntegrator;
-
+class Light;
+class Scene;
+class Renderer;
 
 #endif
