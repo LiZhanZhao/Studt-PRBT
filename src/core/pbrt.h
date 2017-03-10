@@ -40,6 +40,7 @@ using std::sort;
 #define INV_TWOPI  0.15915494309189533577f
 #define INV_FOURPI 0.07957747154594766788f
 
+#define ALLOCA(TYPE, COUNT) (TYPE *)alloca((COUNT) * sizeof(TYPE))
 
 // Global Inline Functions
 inline float Lerp(float t, float v1, float v2) {
@@ -139,5 +140,16 @@ template <int nSamples> class CoefficientSpectrum;
 class RGBSpectrum;
 typedef RGBSpectrum Spectrum;
 class VolumeRegion;
+class Sampler;
+struct CameraSample;
+struct LightSample;
+struct LightSampleOffsets;
+struct VisibilityTester;
+struct Distribution1D;
+struct Sample;
+class Integrator;
+class SurfaceIntegrator;
+class VolumeIntegrator;
+
 
 #endif

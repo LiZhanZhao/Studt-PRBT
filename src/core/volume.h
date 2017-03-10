@@ -8,7 +8,7 @@
 #include "spectrum.h"
 #include "geometry.h"
 #include "transform.h"
-//#include "integrator.h"
+#include "integrator.h"
 
 // Volume Scattering Declarations
 float PhaseIsotropic(const Vector &w, const Vector &wp);
@@ -92,6 +92,15 @@ private:
 bool GetVolumeScatteringProperties(const string &name, Spectrum *sigma_a,
                                    Spectrum *sigma_prime_s);
 
-
+class VolumeIntegrator : public Integrator {
+public:
+	// VolumeIntegrator Interface
+	virtual Spectrum Li(const Scene *scene, const Renderer *renderer,
+		const RayDifferential &ray, const Sample *sample, RNG &rng,
+		Spectrum *transmittance, MemoryArena &arena) const = 0;
+	virtual Spectrum Transmittance(const Scene *scene,
+		const Renderer *renderer, const RayDifferential &ray,
+		const Sample *sample, RNG &rng, MemoryArena &arena) const = 0;
+};
 
 #endif // PBRT_CORE_VOLUME_H
