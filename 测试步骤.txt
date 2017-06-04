@@ -1,0 +1,3 @@
+1. 生成了pbrt.exe之后，就可以运行 pbrt C:/xxx/killeroo-simple.pbrt 生成 killeroo-simple.exr
+
+2. 生成 exrtotiff.exe 之后，就可以运行 exrtotiff killeroo-simple.exr killeroo-simple.tiff 生成 killeroo-simple.tiff，就可以看到图片了。
