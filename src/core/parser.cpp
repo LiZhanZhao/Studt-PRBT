@@ -43,6 +43,7 @@ bool ParseFile(const string &filename) {
     extern int line_num;
     extern int yydebug;
 
+	//读取环境变量的当前值
     if (getenv("PBRT_YYDEBUG") != NULL)
         yydebug = 1;
 
@@ -51,14 +52,19 @@ bool ParseFile(const string &filename) {
     else {
 		// 打开filename
         yyin = fopen(filename.c_str(), "r");
+		// 设置 filename的目录为搜索目录
         SetSearchDirectory(DirectoryContaining(filename));
     }
 
     if (yyin != NULL) {
+		// 设置当前文件
         current_file = filename;
         if (yyin == stdin) current_file = "<standard input>";
         line_num = 1;
+
+		// 开始解析场景文件
         yyparse();
+
         if (yyin != stdin) fclose(yyin);
     }
     current_file = "";

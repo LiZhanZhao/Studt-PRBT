@@ -1147,7 +1147,7 @@ void pbrtObjectInstance(const string &name) {
     renderOptions->primitives.push_back(prim);
 }
 
-
+// 当解析完场景文件的时候，就会调用这个函数，进行MakeScene和MakeRenderer
 void pbrtWorldEnd() {
     VERIFY_WORLD("WorldEnd");
     // Ensure there are no pushed graphics states
