@@ -49,6 +49,7 @@ bool ParseFile(const string &filename) {
     if (filename == "-")
         yyin = stdin;
     else {
+		// ´ò¿ªfilename
         yyin = fopen(filename.c_str(), "r");
         SetSearchDirectory(DirectoryContaining(filename));
     }

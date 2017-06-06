@@ -39,6 +39,7 @@
 
 // main program
 int main(int argc, char *argv[]) {
+	// 命令行的选项类，下面就是把命令行的参数保存到Options中
     Options options;
     vector<string> filenames;
     // Process command-line arguments
@@ -65,18 +66,24 @@ int main(int argc, char *argv[]) {
         printf("See the file LICENSE.txt for the conditions of the license.\n");
         fflush(stdout);
     }
+	// 初始化 全局变量，例如 currentApiState，renderOptions，graphicsState
     pbrtInit(options);
+
     // Process scene description
+	// 处理 场景 描述
     PBRT_STARTED_PARSING();
     if (filenames.size() == 0) {
         // Parse scene from standard input
         ParseFile("-");
     } else {
         // Parse scene from input files
+		// 解析场景文件
         for (u_int i = 0; i < filenames.size(); i++)
             if (!ParseFile(filenames[i]))
                 Error("Couldn't open scene file \"%s\"", filenames[i].c_str());
     }
+
+
     pbrtCleanup();
     return 0;
 }

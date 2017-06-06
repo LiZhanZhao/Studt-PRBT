@@ -675,6 +675,7 @@ Film *MakeFilm(const string &name,
 
 // API Function Definitions
 void pbrtInit(const Options &opt) {
+	// 保存命令行的选项
     PbrtOptions = opt;
     // API Initialization
     if (currentApiState != STATE_UNINITIALIZED)
