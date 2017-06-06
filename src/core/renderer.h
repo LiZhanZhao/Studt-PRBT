@@ -44,10 +44,16 @@ class Renderer {
 public:
     // Renderer Interface
     virtual ~Renderer();
+
+	// computes an image of the scene or more generally,a set of measurement of the scene lighting.
     virtual void Render(const Scene *scene) = 0;
+
+	// compute information about the illumination along rays in the scene, returns the incident radiance along the gived ray
     virtual Spectrum Li(const Scene *scene, const RayDifferential &ray,
         const Sample *sample, RNG &rng, MemoryArena &arena,
         Intersection *isect = NULL, Spectrum *T = NULL) const = 0;
+
+	// return fraction of light that is attenuated by volumetric scattering along the ray
     virtual Spectrum Transmittance(const Scene *scene,
         const RayDifferential &ray, const Sample *sample,
         RNG &rng, MemoryArena &arena) const = 0;
