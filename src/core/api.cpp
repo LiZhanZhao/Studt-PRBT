@@ -1147,6 +1147,7 @@ void pbrtObjectInstance(const string &name) {
     renderOptions->primitives.push_back(prim);
 }
 
+// ------------------------------------------------相当于入口
 // 当解析完场景文件的时候，就会调用这个函数，进行MakeScene和MakeRenderer
 void pbrtWorldEnd() {
     VERIFY_WORLD("WorldEnd");

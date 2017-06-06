@@ -62,7 +62,9 @@ public:
     const BBox &WorldBound() const;
 
     // Scene Public Data
+	// 场景的几何体列表
     Primitive *aggregate;
+	// 场景的光源列表
     vector<Light *> lights;
     VolumeRegion *volumeRegion;
     BBox bound;
