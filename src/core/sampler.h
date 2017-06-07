@@ -42,6 +42,10 @@
 #include "rng.h"
 #include "memory.h"
 
+// The Sampler is responsible for choosing the points on the image plane from which ray 
+// are traced,and it is responsible for supplying the sample position used by the integrators
+// in their light transport computations.
+
 // Sampling Declarations
 class Sampler {
 public:

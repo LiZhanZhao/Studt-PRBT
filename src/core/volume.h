@@ -124,6 +124,8 @@ private:
 
 bool GetVolumeScatteringProperties(const string &name, Spectrum *sigma_a,
                                    Spectrum *sigma_prime_s);
+
+// VolumeIntegrator handle the scattering from volumetric primitives
 class VolumeIntegrator : public Integrator {
 public:
     // VolumeIntegrator Interface

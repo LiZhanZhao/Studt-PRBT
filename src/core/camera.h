@@ -41,6 +41,9 @@
 #include "geometry.h"
 #include "transform.h"
 
+// The Camera object controls the viewing and lens parameters such as position,orientation,
+// focus(Ωπµ„) and fided of view( ”Ω«).
+
 // Camera Declarations
 class Camera {
 public:

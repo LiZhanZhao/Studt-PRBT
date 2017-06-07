@@ -47,6 +47,9 @@
 #include "probes.h"
 #include "renderer.h"
 
+// Integrator handle the task of simulating the propagation of light in the scene in 
+// order to compute how much light arrives at image sample positions on the film plane
+
 // Integrator Declarations
 class Integrator {
 public:
@@ -60,7 +63,7 @@ public:
     }
 };
 
-
+// SurfaceIntegrator compute reflected light from geometric surface
 class SurfaceIntegrator : public Integrator {
 public:
     // SurfaceIntegrator Interface

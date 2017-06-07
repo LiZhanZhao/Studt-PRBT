@@ -41,6 +41,9 @@
 #include "renderer.h"
 #include "parallel.h"
 
+// rendering process is driven by a stream of samples from a Sampler,each such sample
+// identifies a point on the image at which to compute the arriving light to form(пнЁи) the image
+
 // SamplerRenderer Declarations
 class SamplerRenderer : public Renderer {
 public:

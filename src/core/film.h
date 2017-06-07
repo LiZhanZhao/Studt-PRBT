@@ -39,6 +39,9 @@
 // core/film.h*
 #include "pbrt.h"
 
+// The File is responsible for writing the final image to disk and possibly displaying
+// it on the screen as it is being computed
+
 // Film Declarations
 class Film {
 public:
