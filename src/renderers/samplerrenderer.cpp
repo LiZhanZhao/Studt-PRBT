@@ -69,10 +69,19 @@ void SamplerRendererTask::Run() {
     }
 
     // Declare local variables used for rendering loop
+
+	// The MemoryArena is passed to Integrators for allocating small anounts of temporary
+	// memory during rendering.
     MemoryArena arena;
+
+	// The RNG is made available to Integrators for generating psedudo-random numbers for
+	// Monte Carlo Sampling
     RNG rng(taskNum);
 
     // Allocate space for samples and intersections
+
+	// MaximumSampleCount  method returns an upper bound on the number of samples it will
+	// return at once.(返回一个上限值)
     int maxSamples = sampler->MaximumSampleCount();
     Sample *samples = origSample->Duplicate(maxSamples);
     RayDifferential *rays = new RayDifferential[maxSamples];
@@ -82,14 +91,28 @@ void SamplerRendererTask::Run() {
 
     // Get samples from _Sampler_ and update image
     int sampleCount;
+
+	// GetMoreSamples method is called to initialize the samples array(上文的samples数组) with one or more image sample values
+	// the method returns the number of samples it initialized ,or zero when it has finish generating all of the samples for the
+	// region of the image that is is responsible for.
     while ((sampleCount = sampler->GetMoreSamples(samples, rng)) > 0) {
         // Generate camera rays and compute radiance along rays
         for (int i = 0; i < sampleCount; ++i) {
             // Find camera ray for _sample[i]_
             PBRT_STARTED_GENERATING_CAMERA_RAY(&samples[i]);
+
             float rayWeight = camera->GenerateRayDifferential(samples[i], &rays[i]);
+
+			// however, when rendering high-quality images ,many samples are often
+			// averaged together to compute each pixel value, therefore, the ScaleDifferentials
+			// method scales the differential ray to account for the actual spacing between 
+			// samples on the film plane
             rays[i].ScaleDifferentials(1.f / sqrtf(sampler->samplesPerPixel));
             PBRT_FINISHED_GENERATING_CAMERA_RAY(&samples[i], &rays[i], rayWeight);
+
+
+			// we have a ray, the next task is to determine the amount of light arriving at the
+			// image plane along that ray(its radiance)
 
             // Evaluate radiance along camera ray
             PBRT_STARTED_CAMERA_RAY_INTEGRATION(&rays[i], &samples[i]);
@@ -107,6 +130,9 @@ void SamplerRendererTask::Run() {
                     Ls[i] = 0.f;
             }
             else {
+			// renderer->Li() method to compute radiance
+			// Radiance values are represented here with the Spectrum class,which is pbrt's abstraction for energy
+			// distributions thar vary over wavelength -- in other words, color
             if (rayWeight > 0.f)
                 Ls[i] = rayWeight * renderer->Li(scene, rays[i], &samples[i], rng,
                                                  arena, &isects[i], &Ts[i]);
@@ -134,6 +160,13 @@ void SamplerRendererTask::Run() {
             }
             PBRT_FINISHED_CAMERA_RAY_INTEGRATION(&rays[i], &samples[i], &Ls[i]);
         }
+
+		// sampler->ReportResults method is used to pass the radiance values and information about
+		// the intersecions found back to te sampler; this gives the sampler a chance
+		// to incorporate(结合) information from the results of these samples into the 
+		// samples it generates later.(for example, it could generate extra samples in pixels that have
+		// a lot of detail), This method returns true if this group of samples should be added to the
+		// image,or false if it shouldbe discarded.
 
         // Report sample results to _Sampler_, add contributions to image
         if (sampler->ReportResults(samples, rays, Ls, isects, sampleCount))
@@ -206,6 +239,8 @@ void SamplerRenderer::Render(const Scene *scene) {
 
     ProgressReporter reporter(nTasks, "Rendering");
 
+	// each SamplerRendererTask is responsible for computing the samples in a small 
+	// rectangular subset of the image
     vector<Task *> renderTasks;
     for (int i = 0; i < nTasks; ++i)
         renderTasks.push_back(new SamplerRendererTask(scene, this, camera,

@@ -67,6 +67,8 @@ private:
 };
 
 
+//SamplerRendererTask is responsible for computing the samples in a small 
+// rectangular subset of the image
 
 // SamplerRendererTask Declarations
 class SamplerRendererTask : public Task {

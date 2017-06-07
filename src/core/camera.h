@@ -51,8 +51,12 @@ public:
     Camera(const AnimatedTransform &cam2world, float sopen, float sclose,
            Film *film);
     virtual ~Camera();
+
+	// return the Ray for a given image sample position
     virtual float GenerateRay(const CameraSample &sample,
                               Ray *ray) const = 0;
+
+	// return the RayDifferential for a given image sample position
     virtual float GenerateRayDifferential(const CameraSample &sample, RayDifferential *rd) const;
 
     // Camera Public Data

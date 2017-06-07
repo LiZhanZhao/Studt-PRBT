@@ -344,7 +344,9 @@ public:
     int depth;
 };
 
-
+// RayDifferential which incorporates(°üº¬) information about the rays that the Camera
+// would generate for samples that are one pixel away on the image plane in both the
+// x and y directions.
 class RayDifferential : public Ray {
 public:
     // RayDifferential Public Methods
