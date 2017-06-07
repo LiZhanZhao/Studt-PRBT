@@ -203,14 +203,21 @@ void SamplerRenderer::Render(const Scene *scene) {
     int nPixels = camera->film->xResolution * camera->film->yResolution;
     int nTasks = max(32 * NumSystemCores(), nPixels / (16*16));
     nTasks = RoundUpPow2(nTasks);
+
     ProgressReporter reporter(nTasks, "Rendering");
+
     vector<Task *> renderTasks;
     for (int i = 0; i < nTasks; ++i)
         renderTasks.push_back(new SamplerRendererTask(scene, this, camera,
                                                       reporter, sampler, sample, 
                                                       visualizeObjectIds, 
                                                       nTasks-1-i, nTasks));
+	
+	// The EnqueueTasks function takes an array of tasks and runs them on all of the
+	// processors in the system.
     EnqueueTasks(renderTasks);
+
+	// suspends(ÍÆ³Ù) the calling thread of execution until all of the enqueued tasks have finished
     WaitForAllTasks();
     for (uint32_t i = 0; i < renderTasks.size(); ++i)
         delete renderTasks[i];
