@@ -60,6 +60,12 @@ static uint32_t hash(char *key, uint32_t len)
 void SamplerRendererTask::Run() {
     PBRT_STARTED_RENDERTASK(taskNum);
     // Get sub-_Sampler_ for _SamplerRendererTask_
+
+	// GetSubSampler() method to get a new Sampler that only generates samples for the subset
+	// of the image that the SamplerRenderer is responsible for
+	// The GetSubSampler() method uses the task number and the total number of tasks passed to the SamplerRendererTask
+	// constructor to determine which part of the image the returned subsampler should generate
+	// samples for.
     Sampler *sampler = mainSampler->GetSubSampler(taskNum, taskCount);
     if (!sampler)
     {
@@ -130,7 +136,7 @@ void SamplerRendererTask::Run() {
                     Ls[i] = 0.f;
             }
             else {
-			// renderer->Li() method to compute radiance
+			// renderer->Li() method to compute the radiance along the given ray
 			// Radiance values are represented here with the Spectrum class,which is pbrt's abstraction for energy
 			// distributions thar vary over wavelength -- in other words, color
             if (rayWeight > 0.f)
@@ -275,20 +281,38 @@ Spectrum SamplerRenderer::Li(const Scene *scene,
     Intersection localIsect;
     if (!isect) isect = &localIsect;
     Spectrum Li = 0.f;
+
+	// The Scene::Intersect() method finds the first surface that the ray intersects by passing
+	// the request on to an accelerator Primitive.
+
+	// SurfaceIntegrator::Li() to compute the outgoing radiance Lo from
+	// the first surface that the ray intersects and then stores the result in Li.
+
+	// SurfaceIntegrator::Li() then invokes VolumeIntegrator::Transmittance() to compute the fraction of light T that is
+	// extinguished(熄灭) between the surface and the camera due to participating media.
     if (scene->Intersect(ray, isect))
         Li = surfaceIntegrator->Li(scene, this, ray, *isect, sample,
                                    rng, arena);
     else {
+
+		// for rays that do not hit anything, each light’s Light::Le() method is called so that
+		// these particular lights can contribute to the ray’s radiance
+
         // Handle ray that doesn't intersect any geometry
         for (uint32_t i = 0; i < scene->lights.size(); ++i)
            Li += scene->lights[i]->Le(ray);
     }
+	
+	// VolumeIntegrator::Li() determines the radiance Lv added along the ray due to interactions
+	// with participating media.
     Spectrum Lvi = volumeIntegrator->Li(scene, this, ray, sample, rng,
                                         T, arena);
     return *T * Li + Lvi;
 }
 
-
+// It is also useful to be able to independently compute the attenuation along a ray due
+// to participating media; the SamplerRenderer::Transmittance() method computes this
+// quantity by forwarding the request to(将请求转发到) the VolumeIntegrator::Transmittance() method
 Spectrum SamplerRenderer::Transmittance(const Scene *scene,
         const RayDifferential &ray, const Sample *sample, RNG &rng,
         MemoryArena &arena) const {

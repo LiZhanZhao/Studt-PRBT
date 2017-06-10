@@ -384,7 +384,8 @@ private:
     static SampledSpectrum rgbIllum2SpectBlue;
 };
 
-
+// Spectrum class, which is pbrt's abstraction for energy
+// distributions thar vary over wavelength -- in other words, color
 class RGBSpectrum : public CoefficientSpectrum<3> {
     using CoefficientSpectrum<3>::c;
 public:
