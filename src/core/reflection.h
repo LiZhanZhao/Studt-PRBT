@@ -149,7 +149,22 @@ struct BSDFSampleOffsets {
     int nSamples, componentOffset, dirOffset;
 };
 
+/*
+Recall(回想) that bidirectional scattering distribution functions(双向散射分布函数) 
+describe how a surface reflects light arriving at its boundary;
+they essentially(本质上) encapsulate(封装了) the difference between the
+appearance of a mirror versus(与) colored paint, and so forth.
+They are represented in pbrt by the BSDF class. pbrt provides BSDF implementations for several standard scattering
+functions used in computer graphics, such as Lambertian reflection and the Torrance–
+Sparrow microfacet model.
 
+The BSDF interface makes it possible to compute reflected light at a single surface point,
+but BSDFs may vary across(有所不同) a surface. Surfaces with complex material properties, such
+as wood or marble, have a different BSDF at each point. Even if wood is modeled as
+being perfectly diffuse, the color at each point will depend on the wood’s grain(纹理). These
+spatial variations(空间分布) of shading parameters are described with Textures, which in turn may
+be described procedurally or stored in image maps
+*/
 class BSDF {
 public:
     // BSDF Public Methods

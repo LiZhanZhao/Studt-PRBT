@@ -41,10 +41,23 @@
 #include "integrator.h"
 #include "scene.h"
 
+/*
+This integrator accurately computes reflected and transmitted light from specular surfaces like
+glass, mirrors, and water, although it doesn¡¯t account for other types of indirect lighting
+effects like light bouncing off a wall and illuminating a room
+
+The Whitted integrator works by recursively evaluating radiance along reflected and
+refracted ray directions. It stops the recursion at a predetermined maximum depth,
+
+It stops the recursion at a predetermined maximum depth.
+*/
+
 // WhittedIntegrator Declarations
 class WhittedIntegrator : public SurfaceIntegrator {
 public:
     // WhittedIntegrator Public Methods
+
+	// returns the radiance along a ray
     Spectrum Li(const Scene *scene, const Renderer *renderer,
         const RayDifferential &ray, const Intersection &isect, const Sample *sample,
         RNG &rng, MemoryArena &arena) const;

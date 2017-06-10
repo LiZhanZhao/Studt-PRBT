@@ -181,12 +181,27 @@ Spectrum SpecularReflect(const RayDifferential &ray, BSDF *bsdf,
     float pdf;
     const Point &p = bsdf->dgShading.p;
     const Normal &n = bsdf->dgShading.nn;
+	/*
+	The calls to BSDF::Sample_f() in these functions initialize wi (an incident(ÈëÉä) ray direction) with the chosen direction
+	and return the BSDF¡¯s value for the directions (¦Øo, ¦Øi).
+
+	If the value of the BSDF is
+	nonzero, the integrator uses the Renderer::Li() method to get the incoming radiance
+	along ¦Øi, which in this case will in turn cause the WhittedIntegrator::Li() method
+	to be called again.
+	*/
     Spectrum f = bsdf->Sample_f(wo, &wi, BSDFSample(rng), &pdf,
                                 BxDFType(BSDF_REFLECTION | BSDF_SPECULAR));
     Spectrum L = 0.f;
     if (pdf > 0.f && !f.IsBlack() && AbsDot(wi, n) != 0.f) {
         // Compute ray differential _rd_ for specular reflection
         RayDifferential rd(p, wi, ray, isect.rayEpsilon);
+		/*
+		in order to use ray differentials to antialias(¿¹¾â³Ý) textures that are seen in reflections
+		or refractions, it is necessary to know how reflection and transmission affect the screenspace
+		footprint(×ã¼£) of rays. The fragments that compute the ray differentials for these rays
+		are defined later.
+		*/
         if (ray.hasDifferentials) {
             rd.hasDifferentials = true;
             rd.rxOrigin = p + isect.dg.dpdx;
