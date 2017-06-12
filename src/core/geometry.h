@@ -344,9 +344,20 @@ public:
     int depth;
 };
 
-// RayDifferential which incorporates(°üº¬) information about the rays that the Camera
-// would generate for samples that are one pixel away on the image plane in both the
-// x and y directions.
+/*
+In order to be able to perform better antialiasing with the texture functions defined in
+Chapter 10, pbrt keeps track of some additional information with each ray that is traced.
+In Section 10.1, this information will be used to compute information so that the Texture
+class can estimate(¹À¼Æ) the projected area on the image plane of a small part of the scene. From
+this, the Texture can compute the texture¡¯s average value over that area, leading to a better
+final image.
+
+RayDifferential is a subclass of Ray that contains additional information about two
+auxiliary(¸¨Öú) rays. These extra rays represent camera rays offset one sample in the x and y
+direction from the main ray on the film plane. By determining the area that these three
+rays project to on an object being shaded, the Texture can estimate(¹À¼Æ) an area to average
+over for proper antialiasing.
+*/
 class RayDifferential : public Ray {
 public:
     // RayDifferential Public Methods
