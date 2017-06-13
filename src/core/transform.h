@@ -41,6 +41,7 @@
 #include "geometry.h"
 #include "quaternion.h"
 
+// 列为主的矩阵
 // Matrix4x4 Declarations
 struct Matrix4x4 {
     // Matrix4x4 Public Methods
