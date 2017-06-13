@@ -229,7 +229,11 @@ inline void Transform::operator()(const Vector &v,
   vt->z = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2] * z;
 }
 
-
+/*
+Note that this method does not explicitly compute the transpose of the inverse when
+transforming normals. It just indexes into the inverse matrix in a different order (compare
+to the code for transforming Vectors).
+*/
 inline Normal Transform::operator()(const Normal &n) const {
     float x = n.x, y = n.y, z = n.z;
     return Normal(mInv.m[0][0]*x + mInv.m[1][0]*y + mInv.m[2][0]*z,
