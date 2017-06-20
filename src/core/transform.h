@@ -299,7 +299,23 @@ inline RayDifferential Transform::operator()(const RayDifferential &r) const {
 
 
 
+/*
+The approach used for transformation interpolation in pbrt is based on matrix decomposition(分解)—
+given an arbitrary transformation matrixM, we decompose(分解) it into a concatentation(串联)
+of scale (S), rotation (R), and translation (T) transformations.
+M = SRT
+where each of those components is independently interpolated and then the composite(复合)
+interpolated matrix is found by multiplying the three interpolated matrices together
 
+<--- not use --->
+The most straightforward approach—directly interpolating
+the individual components of the two matrices—is not a good one, as it will generally
+lead to unexpected and undesirable results. For example, if the transformations apply
+different rotations, then even if we have a rigid-body motion, the intermediate matrices
+may scale the object, which is clearly undesirable. (If they have a full 180-degree rotation
+between them, the object may be scaled down to nothing at the middle of the interpolation!)
+
+*/
 // AnimatedTransform Declarations
 class AnimatedTransform {
 public:
