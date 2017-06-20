@@ -41,6 +41,13 @@
 #include <map>
 using std::map;
 
+/*
+pbrt
+supports triangle meshes, where a number of triangles are stored together so that their
+per-vertex data (position, shading normal, etc.) can be shared among multiple triangles.
+Single triangles are simply treated as degenerate(ÍË»¯) meshes.
+*/
+
 // TriangleMesh Declarations
 class TriangleMesh : public Shape {
 public:
@@ -52,6 +59,7 @@ public:
     ~TriangleMesh();
     BBox ObjectBound() const;
     BBox WorldBound() const;
+	// this is return false
     bool CanIntersect() const { return false; }
     void Refine(vector<Reference<Shape> > &refined) const;
     friend class Triangle;
