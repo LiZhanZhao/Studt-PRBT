@@ -41,6 +41,12 @@
 #include "shape.h"
 #include "material.h"
 
+/*
+The Primitive class
+provides additional nongeometric information about the primitive, such as its material
+properties
+*/
+
 // Primitive Declarations
 class Primitive : public ReferenceCounted {
 public:

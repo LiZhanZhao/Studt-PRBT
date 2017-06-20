@@ -43,6 +43,12 @@
 #include "diffgeom.h"
 #include "memory.h"
 
+/*
+The Shape class
+provides access to the raw geometric properties of the primitive, such as its surface
+area and bounding box, and provides a ray intersection routine
+*/
+
 // Shape Declarations
 class Shape : public ReferenceCounted {
 public:
@@ -51,11 +57,52 @@ public:
     virtual ~Shape();
     virtual BBox ObjectBound() const = 0;
     virtual BBox WorldBound() const;
+	/*
+	The default implementation of the Shape::CanIntersect() function indicates that a
+	shape can compute ray intersections, so only shapes that are nonintersectable need to
+	override this method.
+	*/
     virtual bool CanIntersect() const;
+	/*
+	If the shape cannot be intersected directly, it must provide a Shape::Refine() method
+	that splits the shape into a group of new shapes, some of which may be intersectable
+	and some of which may need further refinement. The default implementation of the
+	Shape::Refine() method issues an error message; thus, shapes that are intersectable
+	(which is the common case) do not have to provide an empty instance of this method.
+	pbrt will never call Shape::Refine() if Shape::CanIntersect() returns true.
+	*/
     virtual void Refine(vector<Reference<Shape> > &refined) const;
+
+	/*
+	The rays passed into intersection routines are in world space, so shapes are responsible
+	for transforming them to object space if needed for intersection tests. The
+	differential geometry returned should be in world space.
+	*/
+
+	/*
+	Shape::Intersect(), returns
+	geometric information about a single ray-shape intersection corresponding to the
+	first intersection, if any, in the [mint, maxt] parametric range along the ray
+	*/
     virtual bool Intersect(const Ray &ray, float *tHit,
                            float *rayEpsilon, DifferentialGeometry *dg) const;
+
+	/*
+	Shape::IntersectP(), is a predicate function that determines whether or not an intersection
+	occurs, without returning any details about the intersection itself
+	*/
     virtual bool IntersectP(const Ray &ray) const;
+
+	/*
+	Some shapes (notably(”»∆‰) triangle meshes) support the idea of having two types of differential
+	geometry at a point on the surface: the true geometry, which accurately reflects
+	the local properties of the surface, and the shading geometry, which may have normals
+	and tangents that are different than those in the true differential geometry. For triangle
+	meshes, the user can provide normal vectors and primary tangents at the vertices of the
+	mesh that are interpolated to give normals and tangents at points across the faces of triangles.
+	Shading geometry with interpolated normals can make otherwise faceted triangle
+	meshes appear to be more smooth than they geometrically are
+	*/
     virtual void GetShadingGeometry(const Transform &obj2world,
             const DifferentialGeometry &dg,
             DifferentialGeometry *dgShading) const {
