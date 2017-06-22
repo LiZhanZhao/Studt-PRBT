@@ -51,6 +51,14 @@ Single triangles are simply treated as degenerate(退化) meshes.
 // TriangleMesh Declarations
 class TriangleMesh : public Shape {
 public:
+	/*
+	Unlike the other shapes that leave the primitive description in object space and then
+	transform incoming rays from world space to object space, triangle meshes transform
+	the shape into world space and thus save the work of transforming incoming rays into
+	object space and the work of transforming the intersection’s differential geometry out to
+	world space. This is a good idea because this operation can be performed once at startup,
+	avoiding transforming rays many times during rendering.
+	*/
     // TriangleMesh Public Methods
     TriangleMesh(const Transform *o2w, const Transform *w2o, bool ro,
                  int ntris, int nverts, const int *vptr,
@@ -59,8 +67,22 @@ public:
     ~TriangleMesh();
     BBox ObjectBound() const;
     BBox WorldBound() const;
-	// this is return false
+	
+	/*
+	The TriangleMesh shape does not directly compute intersections. Instead, it splits(分解) itself
+	into many separate(单独) Triangles, each representing a single triangle. All of the individual
+	triangles reference the shared set of vertices in p, avoiding per-triangle replication(复制) of
+	the shared data. The TriangleMesh class therefore overrides the Shape::CanIntersect()
+	method to indicate that TriangleMeshes cannot be intersected directly.
+	*/
     bool CanIntersect() const { return false; }
+
+	/*
+	When pbrt encounters(遇到) a shape that cannot be intersected directly, it calls its Refine()
+	method. Shape::Refine() is expected to produce a list of simpler shapes in the vector
+	passed in, refined. The implementation here is simple; it creates a new Triangle for each
+	of the triangles in the mesh.
+	*/
     void Refine(vector<Reference<Shape> > &refined) const;
     friend class Triangle;
     template <typename T> friend class VertexTexture;
