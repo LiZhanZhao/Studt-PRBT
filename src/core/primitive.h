@@ -122,7 +122,16 @@ protected:
 Shapes to be rendered directly are represented by the GeometricPrimitive class. This class
 combines a Shape with a description of its appearance properties. So that the geometric
 and shading portions of pbrt can be cleanly separated, these appearance properties are
-encapsulated in the Material class
+encapsulated in the Material class.
+
+The GeometricPrimitive class represents a single shape (e.g., a sphere) in the scene. One
+GeometricPrimitive is allocated for each shape in the scene description provided by the
+user.
+
+Each GeometricPrimitive holds a reference to a Shape and its Material. In addition,
+because primitives in pbrt may be area light sources, it stores a pointer to an AreaLight
+object that describes its emission characteristics
+
 */
 // GeometricPrimitive Declarations
 class GeometricPrimitive : public Primitive {
@@ -136,8 +145,18 @@ public:
     GeometricPrimitive(const Reference<Shape> &s,
                        const Reference<Material> &m, AreaLight *a);
     const AreaLight *GetAreaLight() const;
+
+	/*
+	The GetBSDF() method uses the Primitive°Øs Shape to find the shading geometry at the
+	point and forwards the request(«Î«Û) on to the Material.
+	*/
     BSDF *GetBSDF(const DifferentialGeometry &dg,
                   const Transform &ObjectToWorld, MemoryArena &arena) const;
+
+	/*
+	The GetBSDF() method uses the Primitive°Øs Shape to find the shading geometry at the
+	point and forwards the request(«Î«Û) on to the Material.
+	*/
     BSSRDF *GetBSSRDF(const DifferentialGeometry &dg,
                       const Transform &ObjectToWorld, MemoryArena &arena) const;
 private:
