@@ -63,7 +63,9 @@ private:
 };
 
 
-
+/*
+(GridAccel) based on overlaying a uniform grid over the scene,
+*/
 // GridAccel Declarations
 class GridAccel : public Aggregate {
 public:

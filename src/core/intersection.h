@@ -41,6 +41,11 @@
 #include "diffgeom.h"
 #include "transform.h"
 
+/*
+The Intersection structure holds information about a ray¨Cprimitive intersection, including
+information about the differential geometry of the point on the surface, a pointer
+to the Primitive that the ray hit, and its world-to-object-space transformation.
+*/
 // Intersection Declarations
 struct Intersection {
     // Intersection Public Methods

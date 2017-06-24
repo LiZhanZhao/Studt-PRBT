@@ -45,6 +45,9 @@ struct BVHBuildNode;
 struct BVHPrimitiveInfo;
 struct LinearBVHNode;
 
+/*
+(BVHAccel) based on building a hierarchy of bounding boxes around objects in the scene
+*/
 // BVHAccel Declarations
 class BVHAccel : public Aggregate {
 public:

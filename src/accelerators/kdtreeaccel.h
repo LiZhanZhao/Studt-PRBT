@@ -43,6 +43,10 @@
 // KdTreeAccel Declarations
 struct KdAccelNode;
 struct BoundEdge;
+
+/*
+KdTreeAccel) based on adaptive(自适应) recursive(递归) spatial subdivision(空间细分).
+*/
 class KdTreeAccel : public Aggregate {
 public:
     // KdTreeAccel Public Methods
