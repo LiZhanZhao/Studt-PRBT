@@ -8,3 +8,5 @@
 4. pbrt 使用的是 左手坐标系。
 
 5. pbrt 矩阵使用的是 列为主(类似为OpenGL)
+
+6. 第 3.2.5 未完全理解，第 3.7 Subdivivsion surface 未看

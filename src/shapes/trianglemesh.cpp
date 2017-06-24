@@ -359,6 +359,8 @@ void Triangle::GetShadingGeometry(const Transform &obj2world,
     }
     else
         dndu = dndv = Normal(0,0,0);
+
+	// 注意这里的 dpdu = ss， dpdv = ts
     *dgShading = DifferentialGeometry(dg.p, ss, ts,
         obj2world(dndu), obj2world(dndv),
         dg.u, dg.v, dg.shape);
