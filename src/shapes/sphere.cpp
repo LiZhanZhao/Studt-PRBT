@@ -36,6 +36,10 @@
 #include "montecarlo.h"
 #include "paramset.h"
 
+/*
+利用 z = r cos(theta)
+传入 z0,z1就是为了计算 thetaMin，thetaMax
+*/
 // Sphere Method Definitions
 Sphere::Sphere(const Transform *o2w, const Transform *w2o, bool ro,
                float rad, float z0, float z1, float pm)
@@ -59,6 +63,7 @@ bool Sphere::Intersect(const Ray &r, float *tHit, float *rayEpsilon,
                        DifferentialGeometry *dg) const {
     float phi;
     Point phit;
+	
     // Transform _Ray_ to object space
     Ray ray;
     (*WorldToObject)(r, &ray);
@@ -142,6 +147,16 @@ bool Sphere::Intersect(const Ray &r, float *tHit, float *rayEpsilon,
                          (e*F - f*E) * invEGF2 * dpdv);
     Normal dndv = Normal((g*F - f*G) * invEGF2 * dpdu +
                          (f*F - g*E) * invEGF2 * dpdv);
+
+	/*
+	A natural question to ask at this point is, “What effect does the world-to-object transformation
+	have on the correct parametric distance to return?” Indeed, the intersection
+	method has found a parametric distance to the intersection for the object space ray,
+	which may have been translated, rotated, scaled, or worse when it was transformed from
+	world space. However, it can be shown that the parametric distance to an intersection in
+	object space is exactly the same as it would have been if the ray was left in world space
+	and the intersection had been done there and, thus, tHit can be initialized directly.
+	*/
 
     // Initialize _DifferentialGeometry_ from parametric information
     const Transform &o2w = *ObjectToWorld;
