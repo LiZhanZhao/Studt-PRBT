@@ -65,6 +65,24 @@ private:
 
 /*
 (GridAccel) based on overlaying a uniform grid over the scene,
+
+GridAccel is an accelerator that divides an axis-aligned region of space into equal-sized
+box-shaped chunks (called voxels). Each voxel stores references to the primitives that
+overlap it. Given a ray, the grid steps through each of the voxels that the
+ray passes through in order, checking for intersections with only the primitives in each
+voxel. Useless ray intersection tests are reduced substantially because primitives far away
+from the ray aren¡¯t considered at all. Furthermore, because the voxels are considered
+from near to far along the ray, it is possible to stop performing intersection tests once
+an intersection has been found and it is certain that it is not possible for there to be any
+closer intersections.
+
+// Àû±×: 
+GridAccel can suffer from poor performance when the primitives
+in the scene aren¡¯t distributed evenly throughout space. If there¡¯s a small region of space
+with a lot of geometry in it, all that geometry might fall in a single voxel, and performance
+will suffer when a ray passes through that voxel, as many intersection tests will be
+performed.
+
 */
 // GridAccel Declarations
 class GridAccel : public Aggregate {

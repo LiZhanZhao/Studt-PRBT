@@ -215,7 +215,13 @@ whole groups of primitives at once, there will be a substantial(实质) performanc
 compared to simply testing each ray against each primitive in turn. One benefit from
 reusing the Primitive interface for these acceleration structures is that pbrt can support
 hybrid(混合) approaches where an accelerator of one type holds accelerators of other types.
+
+The goal of acceleration structures is to allow the quick,
+simultaneous(同时) rejection(拒绝) of groups of primitives and also to order(排序) the search process so that
+nearby intersections are likely to be found first and farther away ones can potentially be
+ignored.
 */
+
 // Aggregate Declarations
 class Aggregate : public Primitive {
 public:
