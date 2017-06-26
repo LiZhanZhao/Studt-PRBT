@@ -47,6 +47,18 @@ struct LinearBVHNode;
 
 /*
 (BVHAccel) based on building a hierarchy of bounding boxes around objects in the scene
+
+Bounding volume hierarchies (BVHs) are an approach for ray intersection acceleration
+based on primitive subdivision, where the primitives are partitioned(划分) into a hierarchy of
+disjoint sets.
+
+Primitives are stored in the leaves and each node stores a bounding box of the primitives
+in the nodes beneath it. Thus, as a ray traverses through the tree, any time it doesn’t
+intersect a node’s bounds, the subtree beneath that node can be skipped.
+
+BVHs are generally almost as efficient to build as grids are, while delivering(传承) much better
+performance thanks to being able to better adapt to(适合) irregular(不规则) distributions of primitives
+in the scene.
 */
 // BVHAccel Declarations
 class BVHAccel : public Aggregate {
