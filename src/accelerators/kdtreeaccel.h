@@ -46,6 +46,26 @@ struct BoundEdge;
 
 /*
 KdTreeAccel) based on adaptive(自适应) recursive(递归) spatial subdivision(空间细分).
+
+Binary space partitioning (BSP) trees adaptively(自适应) subdivide space into irregularly(不规则) sized
+regions. The most important consequence(结论) of this difference with regular grids is that they
+can be a much more effective data structure for storing irregularly distributed collections
+of geometry. A BSP tree starts with a bounding box that encompasses(包围) the entire scene.
+If the number of primitives in the box is greater than some threshold(阈值), the box is split
+in half by a plane. Primitives are then associated with whichever half they overlap and
+primitives that lie in both halves are associated with both of them.
+
+The splitting process continues recursively either until each leaf region in the resulting
+tree contains a sufficiently small number of primitives or until a maximum depth is
+reached. Because the splitting planes can be placed at arbitrary positions inside the overall
+bound and because different parts of 3D space can be refined to different degrees, BSP
+trees can easily handle uneven(不均匀) distributions of geometry.
+
+Two variations of BSP trees are kd-trees and octrees. A kd-tree simply restricts the splitting
+plane to be perpendicular to one of the coordinate axes; this makes both traversal and
+construction of the tree more efficient, at the cost of some flexibility in how space is
+subdivided.
+
 */
 class KdTreeAccel : public Aggregate {
 public:
