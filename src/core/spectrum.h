@@ -438,6 +438,14 @@ RGBSpectrum,
 which follows the typical computer graphics practice of representing SPDs with coefficients
 representing red, green, and blue colors
 
+
+The RGBSpectrum implementation here represents SPDs with a weighted sum of red,
+green, and blue components. Recall that this representation is ill defined: given two
+different computer displays, having them display the same RGB value won¡¯t cause them
+to emit the same SPD. Thus, in order for a set of RGB values to specify an actual SPD, we
+must know the monitor(ÏÔÊ¾Æ÷) primaries that they are defined in terms of; this information is
+generally not provided along with RGB values.
+
 */
 class RGBSpectrum : public CoefficientSpectrum<3> {
     using CoefficientSpectrum<3>::c;
