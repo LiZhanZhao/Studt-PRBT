@@ -53,14 +53,43 @@ public:
     virtual ~Camera();
 
 	// return the Ray for a given image sample position
+
+	/*
+	computes the world space ray corresponding to a sample position on the image plane。
+	*/
+
+	/*
+	This method also returns a floating-point value that gives a weight for how much light
+	arriving at the film plane along the generated ray will contribute to the final image.
+	*/
     virtual float GenerateRay(const CameraSample &sample,
                               Ray *ray) const = 0;
 
 	// return the RayDifferential for a given image sample position
+
+	/*
+	not only generates this ray but also computes information about the image area that the ray
+	is sampling; this information is used for anti-aliasing computations in Chapter 10
+	*/
+
+	/*
+	computes a main ray like GenerateRay() but
+	also computes the corresponding rays for pixels shifted one pixel in the x and y directions
+	on the image plane. This information helps give the rest of the system a notion of how
+	much of the image area a particular camera ray’s sample represents
+	*/
     virtual float GenerateRayDifferential(const CameraSample &sample, RayDifferential *rd) const;
 
     // Camera Public Data
     AnimatedTransform CameraToWorld;
+	/*
+	Real-world cameras have a shutter(快门) that opens for a short period of time to expose(暴露) the
+	film to light. One result of this nonzero exposure time is motion blur(运动模糊): objects that move
+	during the film exposure time are blurred. If time values between the shutter open time
+	and the shutter close time are associated with each ray, it is possible to compute images
+	that exhibit motion blur. All Cameras therefore store a shutter open and shutter close time
+	and are responsible for generating rays with appropriately set times.
+	*/
     const float shutterOpen, shutterClose;
     Film *film;
 };
