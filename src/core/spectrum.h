@@ -91,6 +91,19 @@ extern const float RGBIllum2SpectRed[nRGB2SpectSamples];
 extern const float RGBIllum2SpectGreen[nRGB2SpectSamples];
 extern const float RGBIllum2SpectBlue[nRGB2SpectSamples];
 
+
+/*
+the CoefficientSpectrum template class, 
+which represents a spectrum as by a particular number of samples given
+by the nSamples template parameter.
+
+//A spectrum represents an SPD
+(SPD):
+spectral power distribution (SPD)—a distribution function of wavelength
+that describes the amount of light at each wavelength.
+
+*/
+
 // Spectrum Declarations
 template <int nSamples> class CoefficientSpectrum {
 public:
@@ -255,7 +268,18 @@ protected:
     float c[nSamples];
 };
 
+/*
+SampledSpectrum, which represents
+the spectrum as a set of point samples over a range of wavelengths.
 
+SampledSpectrum uses the CoefficientSpectrum infrastructure(基础设施) to represent a SPD with
+uniformly spaced samples between a starting and an ending wavelength. The wavelength
+range covers from 400 nm to 700 nm—the range of the visual spectrum(光谱) where the human
+visual system is most sensitive(敏感). The number of samples, 30, is generally more than enough
+to accurately(精确) represent complex SPDs for rendering. Thus, the first sample represents the
+wavelength range [400, 410), the second represents [410, 420), and so forth. These values
+can easily be changed here as needed.
+*/
 class SampledSpectrum : public CoefficientSpectrum<nSpectralSamples> {
 public:
     // SampledSpectrum Public Methods
@@ -264,6 +288,15 @@ public:
     }
     SampledSpectrum(const CoefficientSpectrum<nSpectralSamples> &v)
         : CoefficientSpectrum<nSpectralSamples>(v) { }
+
+
+	/*
+	The FromSampled() method takes arrays of SPD sample values v at given wavelengths
+	lambda and uses them to define a piecewise(分段) linear function to represent the SPD. For
+	each SPD sample in the SampledSpectrum, it uses the AverageSpectrumSamples() utility
+	function, defined below, to compute the average of the piecewise(分段) linear function over the
+	range of wavelengths that each SPD sample is responsible for.
+	*/
     static SampledSpectrum FromSampled(const float *lambda,
                                        const float *v, int n) {
         // Sort samples if unordered, use sorted for returned spectrum
@@ -336,6 +369,14 @@ public:
                 nRGB2SpectSamples, wl0, wl1);
         }
     }
+
+	/*
+	All Spectrum implementations in pbrt must provide a method that converts their SPD to
+	(xλ, yλ, zλ) coefficients. This method is called, for example, in the process of updating
+	pixels in the image.When a Spectrum is provided to the ImageFilm, the ImageFilm converts
+	the SPD into XYZ coefficients as a first step in the process of finally turning them into
+	RGB values used for storage and/or display.
+	*/
     void ToXYZ(float xyz[3]) const {
         xyz[0] = xyz[1] = xyz[2] = 0.f;
         for (int i = 0; i < nSpectralSamples; ++i) {
@@ -349,6 +390,11 @@ public:
         xyz[1] *= scale;
         xyz[2] *= scale;
     }
+
+	/*
+	The y coordinate of XYZ color is closely related to luminance(亮度), which measures the perceived(感知)
+	brightness of a color.
+	*/
     float y() const {
         float yy = 0.f;
         for (int i = 0; i < nSpectralSamples; ++i)
@@ -384,8 +430,23 @@ private:
     static SampledSpectrum rgbIllum2SpectBlue;
 };
 
+
 // Spectrum class, which is pbrt's abstraction for energy
 // distributions thar vary over wavelength -- in other words, color
+/*
+RGBSpectrum,
+which follows the typical computer graphics practice of representing SPDs with coefficients
+representing red, green, and blue colors
+
+
+The RGBSpectrum implementation here represents SPDs with a weighted sum of red,
+green, and blue components. Recall that this representation is ill defined: given two
+different computer displays, having them display the same RGB value won’t cause them
+to emit the same SPD. Thus, in order for a set of RGB values to specify an actual SPD, we
+must know the monitor(显示器) primaries that they are defined in terms of; this information is
+generally not provided along with RGB values.
+
+*/
 class RGBSpectrum : public CoefficientSpectrum<3> {
     using CoefficientSpectrum<3>::c;
 public:
