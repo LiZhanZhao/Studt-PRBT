@@ -78,6 +78,19 @@ void Sampler::ComputeSubWindow(int num, int count, int *newXStart,
 // Sample Method Definitions
 Sample::Sample(Sampler *sampler, SurfaceIntegrator *surf,
                VolumeIntegrator *vol, const Scene *scene) {
+	/*
+	the integrators are given an opportunity to request additional sample values in
+	various quantities. Information about these requirements is stored in the Sample object.
+	When it is later passed to the particular Sampler implementation, it is the Sampler¡¯s responsibility
+	to generate all of the requested types of samples
+
+	The integrators¡¯ implementations of the Integrator::RequestSamples() method in turn
+	call the Sample::Add1D() and Sample::Add2D() methods, which request another sample
+	sequence with a given number of sample values. After they are done calling these methods,
+	the Sample constructor can continue, allocating storage for the requested sample
+	values.
+
+	*/
     if (surf) surf->RequestSamples(sampler, this, scene);
     if (vol)  vol->RequestSamples(sampler, this, scene);
     AllocateSampleMemory();
