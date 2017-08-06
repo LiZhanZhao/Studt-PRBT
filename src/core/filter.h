@@ -39,6 +39,16 @@
 // core/filter.h*
 #include "pbrt.h"
 
+/*
+P391 的公式使用到Filter
+
+All filter implementations in pbrt are derived from an abstract Filter class, which provides
+the interface for the f (x, y) functions used in filtering; see Equation (7.4). The
+Film class (described in the Section 7.8) stores a pointer to a Filter and uses it to filter
+the output before writing it to a file.
+
+
+*/
 // Filter Declarations
 class Filter {
 public:
