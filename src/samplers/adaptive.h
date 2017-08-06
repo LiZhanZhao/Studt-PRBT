@@ -40,6 +40,21 @@
 #include "pbrt.h"
 #include "sampler.h"
 
+
+/*
+The AdaptiveSampler implements a simple adaptive sampling algorithm that attempts
+to more-efficiently generate high-quality images by adding extra samples in parts of the
+image that are more complex than others.
+
+(不合格的话，就重新采样多一次，无论这次合不合格，都会接受这次采样结果)
+
+The AdaptiveSampler
+supports two simple refinement criteria(标准). The first is based on checking to see if different
+shapes are intersected by different samples, which indicates a likely geometric discontinuity,
+and the second checks for excessive(过分) contrast(对比) between the colors of different samples.
+
+*/
+
 // AdaptiveSampler Declarations
 class AdaptiveSampler : public Sampler {
 public:
@@ -54,6 +69,15 @@ public:
     }
     int MaximumSampleCount() { return maxSamples; }
     int GetMoreSamples(Sample *sample, RNG &rng);
+
+	/*
+	If further sampling is indicated,
+	ReportResults() sets supersamplePixel to true and leaves (xPos, yPos) unchanged.
+	Thus, the next call to GetMoreSamples() will generate a new set of maxSamples
+	samples for the pixel. When these samples are provided to ReportResults(), super
+	samplePixel is reset to false and the current pixel is advanced.
+	P387
+	*/
     bool ReportResults(Sample *samples, const RayDifferential *rays,
         const Spectrum *Ls, const Intersection *isects, int count);
 private:
