@@ -43,6 +43,10 @@
 #include "filter.h"
 #include "paramset.h"
 
+/*
+The ImageFilm is a Film implementation that filters image sample values with a given
+reconstruction filter and writes the resulting image to disk
+*/
 // ImageFilm Declarations
 class ImageFilm : public Film {
 public:
