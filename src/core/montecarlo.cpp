@@ -143,7 +143,10 @@ static const int primes[] = {
 };
 
 
-
+/*
+Both of them loop over the given number of strata
+over the [0, 1]domain and place a sample value in each one.
+*/
 // Sampling Function Definitions
 void StratifiedSample1D(float *samp, int nSamples, RNG &rng,
                         bool jitter) {
@@ -167,7 +170,27 @@ void StratifiedSample2D(float *samp, int nx, int ny, RNG &rng,
         }
 }
 
+/*
+will use an approach
+called Latin hypercube sampling (LHS), which can generate any number of samples in
+any number of dimensions with reasonably good distribution.
 
+Latin hypercube sampling (sometimes called n-rooks sampling) chooses samples such
+that only a single sample is present in each row and each column of a grid. This can be done
+by generating random samples in the cells along the diagonal(对角线) and then randomly permuting(交换) their
+coordinates. One advantage of LHS is that it can generate any number of samples with a good
+distribution, not just m * n  samples, as with stratified patterns.
+
+In spite of(尽管) addressing(解决) the clumping(聚丛) problem, LHS isn’t necessarily(不是必要的) an improvement to
+stratified sampling; it’s easy to construct cases where the sample positions are essentially
+colinear(共线) and large areas of [0, 1] have no samples near them (e.g., when the permutation(交换)
+of the original samples is the identity, leaving them all where they started). In particular,
+as n increases, Latin hypercube patterns are less and less effective compared to stratified
+patterns.
+
+P354
+P357
+*/
 void LatinHypercube(float *samples, uint32_t nSamples, uint32_t nDim,
                     RNG &rng) {
     // Generate LHS samples along diagonal

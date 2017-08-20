@@ -171,6 +171,11 @@ void StratifiedSample1D(float *samples, int nsamples, RNG &rng,
                         bool jitter = true);
 void StratifiedSample2D(float *samples, int nx, int ny, RNG &rng,
                         bool jitter = true);
+
+/*
+The Shuffle() utility function randomly permutes(½»»») a sample pattern of count samples in
+dims dimensions.
+*/
 template <typename T>
 void Shuffle(T *samp, uint32_t count, uint32_t dims, RNG &rng) {
     for (uint32_t i = 0; i < count; ++i) {
