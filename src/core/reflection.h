@@ -212,6 +212,17 @@ private:
 #define BSDF_ALLOC(arena, Type) new (arena.Alloc(sizeof(Type))) Type
 
 /*
+
+a set of classes for describing the way that light scatters at surfaces.
+Recall that in Section 5.6.1 we introduced the bidirectional reflectance distribution
+function (BRDF) abstraction to describe light reflection at a surface, the BTDF to describe
+transmission at a surface, and the BSDF to encompass both of these effects. In this
+chapter, we will start by defining a generic interface to these surface reflection and transmission
+functions. Scattering from realistic surfaces is often best described as a mixture
+of multiple BRDFs and BTDFs; in Chapter 9, we will introduce a BSDF object that combines
+multiple BRDFs and BTDFs to represent overall scattering from the surface.
+
+
 We will first define the interface for the individual BRDF and BTDF functions. BRDFs
 and BTDFs share a common base class, BxDF. Because both have the exact same interface,
 sharing the same base class reduces repeated code and allows some parts of the system to
@@ -318,17 +329,42 @@ public:
     const BxDFType type;
 };
 
+/*
+It°Øs handy to define an adapter class that makes it easy to reuse an already-defined BRDF
+class as a BTDF, especially for phenomenological models that may be equally plausible
+models of transmission.
 
+The BRDFToBTDF class takes a BRDF°Øs pointer in the constructor
+and uses it to implement a BTDF
+
+*/
 class BRDFToBTDF : public BxDF {
 public:
+
+	/*
+	The constructor for the adapter class is simple. It switches the reflection and transmission
+	flags of the BxDF::type member.
+	*/
     // BRDFToBTDF Public Methods
     BRDFToBTDF(BxDF *b)
         : BxDF(BxDFType(b->type ^ (BSDF_REFLECTION | BSDF_TRANSMISSION))) {
         brdf = b;
     }
+
+	/*
+	The adapter needs to convert an incoming vector to the corresponding vector in the
+	opposite hemisphere. Fortunately, this is a simple calculation in the shading coordinate
+	system, just requiring negation of the vector°Øs z coordinate
+	*/
     static Vector otherHemisphere(const Vector &w) {
         return Vector(w.x, w.y, -w.z);
     }
+
+	/*
+	The BRDFToBTDF::otherHemisphere() method is used to reflect a ray into the other hemisphere
+	before calling the BRDF°Øs BxDF::f(), BxDF::rho(), and BxDF::Sample_f() methods.
+	We°Øll only include f() here since the others are analogous(¿‡À∆).
+	*/
     Spectrum f(const Vector &wo, const Vector &wi) const;
     Spectrum Sample_f(const Vector &wo, Vector *wi, float u1, float u2,
                       float *pdf) const;
