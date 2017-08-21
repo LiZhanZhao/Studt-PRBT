@@ -379,7 +379,12 @@ private:
     BxDF *brdf;
 };
 
-
+/*
+It is also useful to take a given BxDF and scale its contribution with a Spectrum value. The
+ScaledBxDF wrapper holds a BxDF * and a Spectrum and implements this functionality.
+This class is used by the MixMaterial (defined in Section 9.2.3), which creates BSDFs based
+on a weighted combination of two other materials.
+*/
 class ScaledBxDF : public BxDF {
 public:
     // ScaledBxDF Public Methods
