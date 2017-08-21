@@ -211,24 +211,109 @@ private:
 
 #define BSDF_ALLOC(arena, Type) new (arena.Alloc(sizeof(Type))) Type
 
+/*
+We will first define the interface for the individual BRDF and BTDF functions. BRDFs
+and BTDFs share a common base class, BxDF. Because both have the exact same interface,
+sharing the same base class reduces repeated code and allows some parts of the system to
+work with BxDFs generically without distinguishing between BRDFs and BTDFs
+*/
 // BxDF Declarations
 class BxDF {
 public:
     // BxDF Interface
     virtual ~BxDF() { }
     BxDF(BxDFType t) : type(t) { }
+
+	/*
+	The MatchesFlags() utility method determines if the BxDF matches the user-supplied
+	flags:
+	*/
     bool MatchesFlags(BxDFType flags) const {
         return (type & flags) == type;
     }
+
+	/*
+	The key method that BxDFs provide is the BxDF::f() method. It returns the value of the
+	distribution function for the given pair of directions. This interface implicitly assumes
+	that light in different wavelengths is decoupled(½âñî)¡ªenergy at one wavelength will not be
+	reflected at a different wavelength. By making this assumption, the effect of the reflection
+	function can be represented directly with a Spectrum. To support fluorescent materials
+	where this assumption is not true would require that this method return an n ¡Á n matrix
+	that encoded(±àÂë) the transfer(×ªÒÆ) of energy between spectral samples (where n is the number of
+	samples in the Spectrum representation).
+	*/
     virtual Spectrum f(const Vector &wo, const Vector &wi) const = 0;
+
+	/*
+	Not all BxDFs can be evaluated(ÆÀ¹À) with the f() method. For example, perfectly specular
+	objects like a mirror, glass, or water only scatter light from a single incident direction
+	into a single outgoing direction. Such BxDFs are best described with delta distributions
+	that are zero except for the single direction where light is scattered.
+
+	These BxDFs need special handling in pbrt, so we will also provide the method BxDF::
+	Sample_f(). This method is used both for handling scattering that is described by delta
+	distributions as well as for randomly sampling directions from BxDFs that scatter light
+	along multiple directions; this second application will be explained in the discussion
+	of Monte Carlo sampling in Chapter 14. BxDF::Sample_f() computes the direction of
+	incident light ¦Øi given an outgoing direction ¦Øo and returns the value of the BxDF for the
+	given pair of directions. For delta distributions, it is necessary for the BxDF to choose
+	the incident light direction in this way, since the caller has no chance of generating
+	the appropriate ¦Øi direction.1 The u1, u2, and pdf parameters aren¡¯t needed for delta
+	distribution BxDFs, so they will be explained later, in Section 14.5, when we provide
+	implementations of this method for nonspecular reflection functions.
+
+
+	*/
     virtual Spectrum Sample_f(const Vector &wo, Vector *wi,
                               float u1, float u2, float *pdf) const;
+
+	/*
+	P 430
+
+	It can be useful to take the aggregate(¼¯ºÏ) behavior of the 4D BRDF or BTDF, defined as a
+	function over pairs of directions, and reduce(¹éÄÉ) it to a 2D function over a single direction,
+	or even to a constant value that describes its overall scattering behavior.
+
+	The hemispherical-directional reflectance is a 2D function that gives the total reflection in
+	a given direction due to constant illumination over the hemisphere, or, equivalently, total
+	reflection over the hemisphere due to light from a given direction
+
+	The BxDF::rho() method computes the reflectance function ¦Ñhd£¬
+	Some BxDFs can compute
+	this value in closed form, although most use Monte Carlo integration to compute
+	an approximation to it. For those BxDFs, the nSamples and samples parameters are used by
+	the implementation of the Monte Carlo algorithm; they are explained in Section 14.5.5
+
+	*/
     virtual Spectrum rho(const Vector &wo, int nSamples,
                          const float *samples) const;
+
+	/*
+	P 430
+
+	The hemispherical-hemispherical reflectance of a surface, denoted by ¦Ñhh, is a constant
+	spectral value that gives the fraction of incident light reflected by a surface when the
+	incident light is the same from all directions.
+
+	The BxDF::rho() method computes ¦Ñhh if no direction ¦Øo is provided. The remaining
+	parameters are again used when computing a Monte Carlo estimate, if needed
+	*/
     virtual Spectrum rho(int nSamples, const float *samples1,
                          const float *samples2) const;
+
+
     virtual float Pdf(const Vector &wi, const Vector &wo) const;
 
+	/*
+	Although we are hiding
+	the implementation details of the BxDF behind a common interface for reflective and
+	transmissive materials, some of the light transport algorithms in Chapter 15 will need
+	to distinguish between these two types. Therefore, all BxDFs have a BxDF::type member
+	that holds flags from BxDFType. For each BxDF, the flags should have exactly one of BSDF_
+	REFLECTION or BSDF_TRANSMISSION set, and exactly one of the diffuse, glossy, and specular
+	flags. Note that there is no retro-reflective flag; retro-reflection is treated as glossy reflection
+	in this categorization.
+	*/
     // BxDF Public Data
     const BxDFType type;
 };
