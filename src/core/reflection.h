@@ -406,15 +406,35 @@ private:
     Spectrum s;
 };
 
+/*
 
+P 434
+The Fresnel equations describe the amount of light reflected from a surface;
+
+compute the fraction of incoming light that is reflected or transmitted.
+
+Due to conservation of energy, the energy transmitted by a dielectric is 1 - Fr
+
+For convenience, we will define an abstract Fresnel class that provides an interface for
+computing Fresnel reflection coefficients.
+*/
 class Fresnel {
 public:
     // Fresnel Interface
     virtual ~Fresnel();
+
+	/*
+	The only method provided by the Fresnel interface is Fresnel::Evaluate(). Given the
+	cosine of the angle made by the incoming direction and the surface normal, it returns
+	the amount of light reflected by the surface.
+	*/
     virtual Spectrum Evaluate(float cosi) const = 0;
 };
 
 
+/*
+FresnelConductor implements this interface for conductors(导电体).
+*/
 class FresnelConductor : public Fresnel {
 public:
     // FresnelConductor Public Methods
@@ -428,6 +448,9 @@ private:
 };
 
 
+/*
+FresnelDielectric similarly implements the Fresnel interface for dielectric(绝缘体) materials
+*/
 class FresnelDielectric : public Fresnel {
 public:
     // FresnelDielectric Public Methods
@@ -437,7 +460,11 @@ private:
     float eta_i, eta_t;
 };
 
-
+/*
+The FresnelNoOp implementation of the Fresnel interface returns 100% reflection for all
+incoming directions. Although this is physically implausible, it is a convenient capability
+to have available.
+*/
 class FresnelNoOp : public Fresnel {
 public:
     Spectrum Evaluate(float) const { return Spectrum(1.); }
