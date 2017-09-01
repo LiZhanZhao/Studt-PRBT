@@ -470,14 +470,34 @@ public:
     Spectrum Evaluate(float) const { return Spectrum(1.); }
 };
 
+/*
 
+P440
+
+Intuitively, we want the BRDF to be zero everywhere except at the perfect reflection
+direction, which suggests the use of the delta distribution.
+
+the delta distribution:
+(狄拉克δ函数)在概念上，它是这么一个“函数”：在除了零以外的点函数值都等于零，而其在整个定义域上的积分等于1。
+*/
 class SpecularReflection : public BxDF {
 public:
+	/*
+	The SpecularReflection class takes a Fresnel object to describe dielectric or conductor
+	Fresnel properties and an additional Spectrum object, which is used to scale the reflected
+	color.
+	*/
     // SpecularReflection Public Methods
     SpecularReflection(const Spectrum &r, Fresnel *f)
         : BxDF(BxDFType(BSDF_REFLECTION | BSDF_SPECULAR)),
           R(r), fresnel(f) {
     }
+
+	/*
+	No scattering is returned from
+	SpecularReflection::f(), since for an arbitrary pair of directions the delta function
+	returns no scattering
+	*/
     Spectrum f(const Vector &, const Vector &) const {
         return Spectrum(0.);
     }
@@ -492,7 +512,14 @@ private:
     Fresnel *fresnel;
 };
 
+/*
 
+P442
+
+The BTDF for specular transmission. Snell’s law is the basis of the
+derivation.
+
+*/
 class SpecularTransmission : public BxDF {
 public:
     // SpecularTransmission Public Methods
@@ -517,7 +544,12 @@ private:
     FresnelDielectric fresnel;
 };
 
-
+/*
+One of the simplest BRDFs is the Lambertian model. It models a perfect diffuse surface
+that scatters incident illumination equally in all directions. Although this reflection
+model is not physically plausible, it is a good approximation to many real-world surfaces
+such as matte paint.
+*/
 class Lambertian : public BxDF {
 public:
     // Lambertian Public Methods
