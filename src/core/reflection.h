@@ -563,6 +563,21 @@ private:
     Spectrum R;
 };
 
+/*
+P449
+
+Oren and Nayar (1994) observed that real-world objects tend not to exhibit perfect Lambertian
+reflection. Specifically, rough surfaces generally appear brighter as the illumination
+direction approaches the viewing direction. They developed a reflection model that
+describes rough surfaces as a collection of symmetric V-shaped grooves in an effort to
+better model effects like these. They further assumed that each individual microfacet
+(groove face) exhibited perfect Lambertian reflection and derived a BRDF that models
+the aggregate reflection of the collection of grooves. The distribution of microfacets was
+modeled with a Gaussian distribution with a single parameter ¦Ò, the standard deviation
+of the orientation angle.
+
+
+*/
 
 class OrenNayar : public BxDF {
 public:
