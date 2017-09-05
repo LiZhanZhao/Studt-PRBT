@@ -597,7 +597,14 @@ private:
     float A, B;
 };
 
-
+/*
+P454
+We now use the Torrance–Sparrow model to implement a general microfacet-based
+BRDF. It takes a pointer to an abstract MicrofacetDistribution class, which provides
+a single method to compute the D term of the Torrance–Sparrow model. This function,
+MicrofacetDistribution::D(), gives the probability density for microfacets to be
+oriented with normal ωh.
+*/
 class MicrofacetDistribution {
 public:
     // MicrofacetDistribution Interface
@@ -608,7 +615,14 @@ public:
     virtual float Pdf(const Vector &wo, const Vector &wi) const = 0;
 };
 
+/*
+P452
 
+One of the first microfacet models for computer graphics was developed by Torrance
+and Sparrow (1967) to model metallic surfaces. They modeled surfaces as collections of
+perfectly smooth mirrored microfacets. The surface is statistically described by a distribution
+function D(ωh) that gives the probability that a microfacet has orientation ωh
+*/
 class Microfacet : public BxDF {
 public:
     // Microfacet Public Methods
@@ -633,7 +647,14 @@ private:
     Fresnel *fresnel;
 };
 
-
+/*
+P455
+Blinn (1977) proposed a model where the distribution of microfacet normals is approximated
+by an exponential falloff. The most likely microfacet orientation in this model is
+in the surface normal direction, falling off to no microfacets oriented perpendicular to
+the normal. For smooth surfaces, this falloff happens very quickly; for rough surfaces, it
+is more gradual.
+*/
 class Blinn : public MicrofacetDistribution {
 public:
     Blinn(float e) { if (e > 10000.f || isnan(e)) e = 10000.f;
@@ -649,7 +670,14 @@ private:
     float exponent;
 };
 
-
+/*
+P457
+Ashikhmin and Shirley (2000, 2002) developed a microfacet distribution
+function for modeling the appearance of anisotropic surfaces. Recall that an anisotropic
+BRDF is one where the reflection characteristics at a point vary as the surface is rotated
+about that point in the plane perpendicular to the surface normal. Brushed metals(磨砂金属) and
+some types of fabric(织物) exhibit(显示) anisotropy.
+*/
 class Anisotropic : public MicrofacetDistribution {
 public:
     // Anisotropic Public Methods
