@@ -798,6 +798,9 @@ private:
 /*
 The second, RegularHalfangleBRDF, supports the regular sampling used
 byMatusik et al.’s data set (2003a, 2003b).
+
+(简单地理解就是查表)
+
 */
 class RegularHalfangleBRDF : public BxDF {
 public:
