@@ -49,6 +49,13 @@ Spectrum FrDiel(float cosi, float cost, const Spectrum &etai,
                 const Spectrum &etat);
 Spectrum FrCond(float cosi, const Spectrum &n, const Spectrum &k);
 
+/*
+P464
+We’d therefore like to use a mapping function for isotropic BRDFs that takes a 4D pair of
+directions ωi and ωo and converts them into a point in a three-dimensional space such
+that the distance between two points is meaningful, the isotropy of the BRDF is reflected,
+and reciprocity is represented.
+*/
 Point BRDFRemap(const Vector &wo, const Vector &wi);
 struct IrregIsotropicBRDFSample {
     IrregIsotropicBRDFSample(const Point &pp, const Spectrum &vv)
@@ -700,7 +707,25 @@ private:
     float ex, ey;
 };
 
+/*
+P460
+Most BRDF models in graphics do not account for the fact that Fresnel reflection reduces
+the amount of light that reaches the bottom level of layered objects. Consider a polished
+wood table or a wall with glossy paint: if you look at their surfaces head-on, you primarily
+see the wood or the paint pigment color. As you move your viewpoint toward a glancing
+angle, you see less of the underlying color as it is overwhelmed by increasing glossy
+reflection due to Fresnel effects.
 
+In this section, we will implement a BRDF model developed by Ashikhmin and Shirley
+(2000, 2002) that models a diffuse underlying surface with a glossy specular surface above
+it. The effect of reflection from the diffuse surface is modulated by the amount of energy
+left after Fresnel effects have been considered. Figure 8.21 shows this idea: When the
+incident direction is close to the normal, most light is transmitted to the diffuse layer
+and the diffuse term dominates. When the incident direction is close to glancing, glossy
+reflection is the primary mode of reflection. The car model in Figures 12.14 and 12.15
+uses this BRDF for its paint.
+
+*/
 class FresnelBlend : public BxDF {
 public:
     // FresnelBlend Public Methods
@@ -719,7 +744,45 @@ private:
     MicrofacetDistribution *distribution;
 };
 
+/*
+P462
+Using measured data about the reflection properties of real surfaces is one of the most
+effective approaches for rendering realistic materials
 
+However, parameterized BRDF models are often not flexible enough to model the full
+complexity of scattering characteristics of many interesting surfaces. If accurate measured
+reflection data is available for a surface of interest, then directly using it for rendering
+can faithfully re-create the surface’s appearance. In this section, we’ll implement
+BxDFs that interpolate sampled BRDF values directly. While this is a memory-intensive
+approach for scenes that use many different measured BRDFs, it works well for reflection
+distributions that don’t fit analytic models well and can provide a reference for comparison
+to other approaches.
+
+Rendering with measured BRDF data does have challenges. It can be difficult to make
+adjustments for artistic purposes (“like that, just a little more shiny”).5 If there is excessive
+error in the data, results may be poor as well: especially for highly specular and
+anisotropic surfaces, the 4D BRDF must be densely sampled, leading to a large amount
+of data to store and many measurements to be taken. Finally, BRDFs may have considerable
+variation in their values, which adds to the challenges of acquiring accurate BRDF
+data sets.
+
+Therefore, pbrt has implementations of two BxDFs for using measured reflection data for
+rendering. The first, IrregIsotropicBRDF interpolates from irregularly spaced samples of
+isotropic BRDFs. 
+
+IrregIsotropicBRDF supports irregularly sampled isotropic BRDF data. Given a pair of
+directions, it finds a few BRDF samples that are nearby in the space of incident and
+outgoing directions and interpolates between their values, based on how close they are
+to the actual directions.
+
+We’d therefore like to use a mapping function for isotropic BRDFs that takes a 4D pair of
+directions ωi and ωo and converts them into a point in a three-dimensional space such
+that the distance between two points is meaningful, the isotropy of the BRDF is reflected,
+and reciprocity is represented.
+
+(简单地理解就是查表)
+
+*/
 class IrregIsotropicBRDF : public BxDF {
 public:
     // IrregIsotropicBRDF Public Methods
@@ -732,6 +795,10 @@ private:
 };
 
 
+/*
+The second, RegularHalfangleBRDF, supports the regular sampling used
+byMatusik et al.’s data set (2003a, 2003b).
+*/
 class RegularHalfangleBRDF : public BxDF {
 public:
     // RegularHalfangleBRDF Public Methods
