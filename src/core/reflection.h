@@ -470,14 +470,34 @@ public:
     Spectrum Evaluate(float) const { return Spectrum(1.); }
 };
 
+/*
 
+P440
+
+Intuitively, we want the BRDF to be zero everywhere except at the perfect reflection
+direction, which suggests the use of the delta distribution.
+
+the delta distribution:
+(狄拉克δ函数)在概念上，它是这么一个“函数”：在除了零以外的点函数值都等于零，而其在整个定义域上的积分等于1。
+*/
 class SpecularReflection : public BxDF {
 public:
+	/*
+	The SpecularReflection class takes a Fresnel object to describe dielectric or conductor
+	Fresnel properties and an additional Spectrum object, which is used to scale the reflected
+	color.
+	*/
     // SpecularReflection Public Methods
     SpecularReflection(const Spectrum &r, Fresnel *f)
         : BxDF(BxDFType(BSDF_REFLECTION | BSDF_SPECULAR)),
           R(r), fresnel(f) {
     }
+
+	/*
+	No scattering is returned from
+	SpecularReflection::f(), since for an arbitrary pair of directions the delta function
+	returns no scattering
+	*/
     Spectrum f(const Vector &, const Vector &) const {
         return Spectrum(0.);
     }
@@ -492,7 +512,14 @@ private:
     Fresnel *fresnel;
 };
 
+/*
 
+P442
+
+The BTDF for specular transmission. Snell’s law is the basis of the
+derivation.
+
+*/
 class SpecularTransmission : public BxDF {
 public:
     // SpecularTransmission Public Methods
@@ -517,7 +544,12 @@ private:
     FresnelDielectric fresnel;
 };
 
-
+/*
+One of the simplest BRDFs is the Lambertian model. It models a perfect diffuse surface
+that scatters incident illumination equally in all directions. Although this reflection
+model is not physically plausible, it is a good approximation to many real-world surfaces
+such as matte paint.
+*/
 class Lambertian : public BxDF {
 public:
     // Lambertian Public Methods
@@ -531,6 +563,21 @@ private:
     Spectrum R;
 };
 
+/*
+P449
+
+Oren and Nayar (1994) observed that real-world objects tend not to exhibit perfect Lambertian
+reflection. Specifically, rough surfaces generally appear brighter as the illumination
+direction approaches the viewing direction. They developed a reflection model that
+describes rough surfaces as a collection of symmetric V-shaped grooves in an effort to
+better model effects like these. They further assumed that each individual microfacet
+(groove face) exhibited perfect Lambertian reflection and derived a BRDF that models
+the aggregate reflection of the collection of grooves. The distribution of microfacets was
+modeled with a Gaussian distribution with a single parameter σ, the standard deviation
+of the orientation angle.
+
+
+*/
 
 class OrenNayar : public BxDF {
 public:
@@ -550,7 +597,14 @@ private:
     float A, B;
 };
 
-
+/*
+P454
+We now use the Torrance–Sparrow model to implement a general microfacet-based
+BRDF. It takes a pointer to an abstract MicrofacetDistribution class, which provides
+a single method to compute the D term of the Torrance–Sparrow model. This function,
+MicrofacetDistribution::D(), gives the probability density for microfacets to be
+oriented with normal ωh.
+*/
 class MicrofacetDistribution {
 public:
     // MicrofacetDistribution Interface
@@ -561,7 +615,14 @@ public:
     virtual float Pdf(const Vector &wo, const Vector &wi) const = 0;
 };
 
+/*
+P452
 
+One of the first microfacet models for computer graphics was developed by Torrance
+and Sparrow (1967) to model metallic surfaces. They modeled surfaces as collections of
+perfectly smooth mirrored microfacets. The surface is statistically described by a distribution
+function D(ωh) that gives the probability that a microfacet has orientation ωh
+*/
 class Microfacet : public BxDF {
 public:
     // Microfacet Public Methods
@@ -586,7 +647,14 @@ private:
     Fresnel *fresnel;
 };
 
-
+/*
+P455
+Blinn (1977) proposed a model where the distribution of microfacet normals is approximated
+by an exponential falloff. The most likely microfacet orientation in this model is
+in the surface normal direction, falling off to no microfacets oriented perpendicular to
+the normal. For smooth surfaces, this falloff happens very quickly; for rough surfaces, it
+is more gradual.
+*/
 class Blinn : public MicrofacetDistribution {
 public:
     Blinn(float e) { if (e > 10000.f || isnan(e)) e = 10000.f;
@@ -602,7 +670,14 @@ private:
     float exponent;
 };
 
-
+/*
+P457
+Ashikhmin and Shirley (2000, 2002) developed a microfacet distribution
+function for modeling the appearance of anisotropic surfaces. Recall that an anisotropic
+BRDF is one where the reflection characteristics at a point vary as the surface is rotated
+about that point in the plane perpendicular to the surface normal. Brushed metals(磨砂金属) and
+some types of fabric(织物) exhibit(显示) anisotropy.
+*/
 class Anisotropic : public MicrofacetDistribution {
 public:
     // Anisotropic Public Methods
