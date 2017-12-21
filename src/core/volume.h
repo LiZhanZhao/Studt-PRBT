@@ -50,12 +50,29 @@ float PhaseMieHazy(const Vector &w, const Vector &wp);
 float PhaseMieMurky(const Vector &w, const Vector &wp);
 float PhaseHG(const Vector &w, const Vector &wp, float g);
 float PhaseSchlick(const Vector &w, const Vector &wp, float g);
+
+
+/*
+The key abstraction for describing volume scattering in pbrt is the abstract VolumeRegion
+class〞the interface to describe volume scattering in a region of the scene. Multiple
+VolumeRegions of different types can be used to describe different kinds of scattering in
+different parts of the scene.
+*/
 class VolumeRegion {
 public:
     // VolumeRegion Interface
     virtual ~VolumeRegion();
     virtual BBox WorldBound() const = 0;
     virtual bool IntersectP(const Ray &ray, float *t0, float *t1) const = 0;
+
+	/*
+	This interface has four methods corresponding to the spatially varying scattering properties
+	introduced earlier in this chapter. Given a world space point, direction, and time,
+	VolumeRegion::sigma_a(), VolumeRegion::sigma_s(), and VolumeRegion::Lve() return
+	the corresponding absorption, scattering, and emission properties. Given a pair of directions,
+	the VolumeRegion::p() method returns the value of the phase function at the
+	given point and the given time.
+	*/
     virtual Spectrum sigma_a(const Point &, const Vector &,
                              float time) const = 0;
     virtual Spectrum sigma_s(const Point &, const Vector &,
@@ -64,12 +81,35 @@ public:
                          float time) const = 0;
     virtual float p(const Point &, const Vector &,
                     const Vector &, float time) const = 0;
+
+	/*
+	For convenience, there is also a VolumeRegion::sigma_t() method that returns the attenuation
+	coefficient at a point. A default implementation returns the sum of the 考a and
+	考s values, but most of the VolumeRegion implementations will override this method and
+	compute 考t directly. For VolumeRegions that need to do some amount of computation
+	to find the values of 考a and 考s at a particular point, it＊s usually possible to avoid some
+	duplicated work when 考t is actually needed and to compute its value directly.
+	*/
     virtual Spectrum sigma_t(const Point &p, const Vector &wo, float time) const;
+
+	/*
+	Finally, the VolumeRegion::tau() method computes the volume＊s optical thickness from
+	the point ray(ray.mint) to ray(ray.maxt).
+	*/
     virtual Spectrum tau(const Ray &ray, float step = 1.f,
                          float offset = 0.5) const = 0;
 };
 
-
+/*
+The rest of the volume representations in this chapter are based on the assumption
+that the underlying particles throughout the medium all have the same basic scattering
+properties, but their density is spatially varying in the medium. One consequence of this
+assumption is that it is possible to describe the volume scattering properties at a point as
+the product of the density at that point and some baseline value. For example, we might
+set the attenuation coefficient 考t to have a base value of 0.2. In regions where the particle
+density was 1, a 考t value of 0.2 would be returned. If the particle density were 3, however,
+a 考t value of 0.6 would be the result.
+*/
 class DensityRegion : public VolumeRegion {
 public:
     // DensityRegion Public Methods
