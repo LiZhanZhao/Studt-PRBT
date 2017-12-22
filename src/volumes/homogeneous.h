@@ -39,6 +39,14 @@
 // volumes/homogeneous.h*
 #include "volume.h"
 
+/*
+The simplest volume representation, HomogeneousVolumeDensity, describes a box-shaped
+region of space with homogeneous scattering properties. Values for ¦Òa, ¦Òs, the phase
+function¡¯s g value, and the amount of emission Lve are passed to the constructor.
+In conjunction with a transformation from world space to the volume¡¯s object space
+and an axis-aligned object space bound, this suffices to describe the region¡¯s scattering
+properties and spatial extent.
+*/
 // HomogeneousVolumeDensity Declarations
 class HomogeneousVolumeDensity : public VolumeRegion {
 public:
